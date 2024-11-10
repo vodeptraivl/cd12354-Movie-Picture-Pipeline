@@ -46,14 +46,14 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          aws-region: us-east-1
 
       - name: ECR Login
         uses: aws-actions/amazon-ecr-login@v2
         with:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          aws-region: us-east-1
 
       - name: Build Docker image
         run: |
@@ -63,19 +63,19 @@ jobs:
       - name: Tag Docker Image
         run: |
           cd ./starter/backend
-          docker tag backend:latest ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+          docker tag backend:latest 371809170716.dkr.ecr.us-east-1.amazonaws.com/backend:latest
       - name: Push Docker image to ECR
         run: |
           cd ./starter/backend
-          docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+          docker push 371809170716.dkr.ecr.us-east-1.amazonaws.com/backend:latest
       
       - name: Kubeconfig Auth
         run: |
-          aws eks update-kubeconfig --name cluster --region ${{ vars.AWS_DEFAULT_REGION }}
+          aws eks update-kubeconfig --name cluster --region us-east-1
           kubectl config current-context
           kubectl get nodes
       - name: Deploy to Kubernetes
         run: |
           cd ./starter/backend/k8s
-          kustomize edit set image backend=${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+          kustomize edit set image backend=371809170716.dkr.ecr.us-east-1.amazonaws.com/backend:latest
           kustomize build | kubectl apply -f -

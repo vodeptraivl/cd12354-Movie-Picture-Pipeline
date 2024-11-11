@@ -1,0 +1,1 @@
+front end URL : http://a17d60326076742ffa8454cccb3a55c0-1854245768.us-east-1.elb.amazonaws.com
